@@ -1,86 +1,97 @@
-import { Box, Flex, Heading, Link, SimpleGrid, Text } from '@chakra-ui/layout'
+import { useEffect, useState } from 'react'
+
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
-import Image from 'next/image'
+import NextImage from 'next/image'
+
+import gohanGif from '../assets/gohan.gif'
 
 export default function Home() {
+  // Just a state variable we use to store our user's public wallet. Don't forget to import useState.
+  const [currentAccount, setCurrentAccount] = useState(null)
+
+  // Since this method will take some time, make sure to declare it as async
+  const checkIfWalletIsConnected = async () => {
+    try {
+      // First make sure we have access to window.ethereum
+      const { ethereum } = window
+
+      if (!ethereum) {
+        console.log('Make sure you have MetaMask!')
+        return
+      } else {
+        console.log('We have the ethereum object', ethereum)
+      }
+
+      const accounts = await ethereum.request({ method: 'eth_accounts' })
+
+      if (accounts.length !== 0) {
+        const account = accounts[0]
+        console.log('Found an authorized account:', account)
+        setCurrentAccount(account)
+      } else {
+        console.log('No authorized account found')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const connectWalletAction = async () => {
+    try {
+      const { ethereum } = window
+      if (!ethereum) {
+        alert('Get MetaMask!')
+        return
+      }
+      const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
+
+      console.log('Connected', accounts[0])
+      setCurrentAccount(accounts[0])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // This runs our function when the page loads.
+  useEffect(() => {
+    checkIfWalletIsConnected()
+  }, [])
+
   return (
     <Box>
       {/* Edit the Head info */}
-      <NextSeo title="Home" description="Description" />
+      <NextSeo title="Home" description="NFT DragonVerse game" />
 
       <Flex
         role="main"
-        bg="white"
         direction="column"
         align="center"
         justify="center"
         py="12"
         px="6"
       >
-        <Heading as="h1">Next Chakra UI Starter</Heading>
-
-        <Text mb="12">
-          Get started by editing <code>pages/index.js</code>
+        <Heading as="h1" color="white" fontSize="48px">
+          🔥 DragonVerse 🔥
+        </Heading>
+        <Text mb="12" color="white" fontSize="20px">
+          Team up to protect the DragonVerse!
         </Text>
 
-        <SimpleGrid columns={[1, 2]} spacing={12} maxW="600px">
-          <Link href="https://nextjs.org/docs">
-            <Heading as="h3" fontSize="lg">
-              Documentation &rarr;
-            </Heading>
-            <Text>
-              Find in-depth information about Next.js features and API.
-            </Text>
-          </Link>
-
-          <Link href="https://nextjs.org/learn">
-            <Heading as="h3" fontSize="lg">
-              Learn &rarr;
-            </Heading>
-            <Text>
-              Learn about Next.js in an interactive course with quizzes!
-            </Text>
-          </Link>
-
-          <Link href="https://github.com/vercel/next.js/tree/master/examples">
-            <Heading as="h3" fontSize="lg">
-              Examples &rarr;
-            </Heading>
-            <Text>
-              Discover and deploy boilerplate example Next.js projects.
-            </Text>
-          </Link>
-
-          <Link href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app">
-            <Heading as="h3" fontSize="lg">
-              Deploy &rarr;
-            </Heading>
-            <Text>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </Text>
-          </Link>
-        </SimpleGrid>
+        <Box rounded="2xl" overflow="hidden" display="inline-flex" mb="12">
+          <NextImage src={gohanGif} />
+        </Box>
+        <Button
+          onClick={connectWalletAction}
+          colorScheme="orange"
+          size="lg"
+          rounded="xl"
+        >
+          Connect Wallet To Get Started
+        </Button>
       </Flex>
 
-      <Box role="contentinfo">
-        <Flex justify="center" p="6">
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Powered by{' '}
-            <span>
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                width={72}
-                height={16}
-              />
-            </span>
-          </a>
-        </Flex>
-      </Box>
+      <Box role="contentinfo" p="10"></Box>
     </Box>
   )
 }

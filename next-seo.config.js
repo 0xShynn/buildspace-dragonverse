@@ -4,13 +4,13 @@
 const canonicalUrl = ''
 
 // Edit the default title
-const defaultTitle = 'Default title'
+const defaultTitle = 'DragonVerse'
 const defaultDescription = 'Default description'
 
 // Edit the SEO parameters
 export const SEO = {
   defaultTitle: defaultTitle,
-  titleTemplate: `${defaultTitle} | %s`,
+  titleTemplate: `%s | ${defaultTitle}`,
   canonical: canonicalUrl,
   additionalLinkTags: [
     {
