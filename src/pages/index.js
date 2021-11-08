@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react'
 
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import NextImage from 'next/image'
 
 import gohanGif from '../assets/gohan.gif'
+import SelectCharacter from '../components/SelectCharacter'
 
 export default function Home() {
   // Just a state variable we use to store our user's public wallet. Don't forget to import useState.
   const [currentAccount, setCurrentAccount] = useState(null)
+  const [characterNFT, setCharacterNFT] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   // Since this method will take some time, make sure to declare it as async
   const checkIfWalletIsConnected = async () => {
@@ -32,6 +43,7 @@ export default function Home() {
       } else {
         console.log('No authorized account found')
       }
+      setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
@@ -78,17 +90,23 @@ export default function Home() {
           Team up to protect the DragonVerse!
         </Text>
 
-        <Box rounded="2xl" overflow="hidden" display="inline-flex" mb="12">
-          <NextImage src={gohanGif} />
-        </Box>
-        <Button
-          onClick={connectWalletAction}
-          colorScheme="orange"
-          size="lg"
-          rounded="xl"
-        >
-          Connect Wallet To Get Started
-        </Button>
+        {!currentAccount && !isLoading && !characterNFT ? (
+          <VStack>
+            <Box rounded="2xl" overflow="hidden" display="inline-flex" mb="12">
+              <NextImage src={gohanGif} />
+            </Box>
+            <Button
+              onClick={connectWalletAction}
+              colorScheme="orange"
+              size="lg"
+              rounded="xl"
+            >
+              Connect Wallet To Get Started
+            </Button>
+          </VStack>
+        ) : (
+          <SelectCharacter setCharacterNFT={setCharacterNFT} />
+        )}
       </Flex>
 
       <Box role="contentinfo" p="10"></Box>
