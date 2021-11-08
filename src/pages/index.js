@@ -1,19 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  Text,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { ethers } from 'ethers'
 import { NextSeo } from 'next-seo'
 import NextImage from 'next/image'
 
 import gohanGif from '../assets/gohan.gif'
 import SelectCharacter from '../components/SelectCharacter'
+import { CONTRACT_ADDRESS, transformCharacterData } from '../constants'
+import myEpicGame from '../utils/MyEpicGame.json'
 
 export default function Home() {
   // Just a state variable we use to store our user's public wallet. Don't forget to import useState.
@@ -70,6 +65,33 @@ export default function Home() {
     checkIfWalletIsConnected()
   }, [])
 
+  useEffect(() => {
+    const fetchNFTMetadata = async () => {
+      console.log('Checking for Character NFT on address: ', currentAccount)
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const signer = provider.getSigner()
+      const gameContract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        myEpicGame.abi,
+        signer
+      )
+
+      const txn = await gameContract.checkIfUserHasNFT()
+      if (txn.name) {
+        console.log('User has character NFT')
+        setCharacterNFT(transformCharacterData(txn))
+      } else {
+        console.log('No character NFT found')
+      }
+    }
+
+    if (currentAccount) {
+      console.log('Current Account: ', currentAccount)
+      fetchNFTMetadata()
+    }
+  }, [currentAccount])
+
   return (
     <Box>
       {/* Edit the Head info */}
@@ -82,6 +104,8 @@ export default function Home() {
         justify="center"
         py="12"
         px="6"
+        maxW="1110px"
+        mx="auto"
       >
         <Heading as="h1" color="white" fontSize="48px">
           🔥 DragonVerse 🔥
