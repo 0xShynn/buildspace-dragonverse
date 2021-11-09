@@ -1,4 +1,4 @@
-const CONTRACT_ADDRESS = process.env.SMART_CONTRACT_ADDRESS
+const CONTRACT_ADDRESS = '0xEB80A6E99F7D1619ccC4769d8f0c71bd85053FD9'
 
 const transformCharacterData = (characterData) => {
   return {

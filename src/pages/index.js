@@ -114,23 +114,30 @@ export default function Home() {
           Team up to protect the DragonVerse!
         </Text>
 
-        {!currentAccount && !isLoading && !characterNFT ? (
-          <VStack>
-            <Box rounded="2xl" overflow="hidden" display="inline-flex" mb="12">
-              <NextImage src={gohanGif} />
-            </Box>
-            <Button
-              onClick={connectWalletAction}
-              colorScheme="orange"
-              size="lg"
-              rounded="xl"
-            >
-              Connect Wallet To Get Started
-            </Button>
-          </VStack>
-        ) : (
-          <SelectCharacter setCharacterNFT={setCharacterNFT} />
-        )}
+        {!isLoading ? (
+          !currentAccount && !characterNFT ? (
+            <VStack>
+              <Box
+                rounded="2xl"
+                overflow="hidden"
+                display="inline-flex"
+                mb="12"
+              >
+                <NextImage src={gohanGif} />
+              </Box>
+              <Button
+                onClick={connectWalletAction}
+                colorScheme="orange"
+                size="lg"
+                rounded="xl"
+              >
+                Connect Wallet To Get Started
+              </Button>
+            </VStack>
+          ) : (
+            <SelectCharacter setCharacterNFT={setCharacterNFT} />
+          )
+        ) : null}
       </Flex>
 
       <Box role="contentinfo" p="10"></Box>
