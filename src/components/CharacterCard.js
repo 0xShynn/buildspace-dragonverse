@@ -29,7 +29,16 @@ const CharacterCard = ({ name, image, hp, maxHp, type, children }) => {
         </Heading>
       </Box>
       <Box h="300px" w="full" pos="relative" roundedTop="lg" overflow="hidden">
-        <NextImage src={image} alt={name} layout="fill" objectFit="cover" />
+        <NextImage
+          src={
+            type === 'boss'
+              ? image
+              : `https://cloudflare-ipfs.com/ipfs/${image}`
+          }
+          alt={name}
+          layout="fill"
+          objectFit="cover"
+        />
       </Box>
       <Progress
         size="lg"

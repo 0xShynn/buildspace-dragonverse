@@ -71,7 +71,9 @@ const SelectCharacter = ({ setCharacterNFT }) => {
         console.log('CharacterNFT: ', characterNFT)
         setCharacterNFT(transformCharacterData(characterNFT))
         alert(
-          `Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${gameContract}/${tokenId.toNumber()}`
+          `Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${
+            gameContract.address
+          }/${tokenId.toNumber()}`
         )
       }
     }
@@ -95,7 +97,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
       <Box key={character.name} w="full">
         <Box h="500px" pos="relative" rounded="md" overflow="hidden" mb="4">
           <NextImage
-            src={character.imageURI}
+            src={`https://cloudflare-ipfs.com/ipfs/${character.imageURI}`}
             alt={character.name}
             layout="fill"
           />
