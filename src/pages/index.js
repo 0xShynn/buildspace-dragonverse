@@ -6,6 +6,7 @@ import { NextSeo } from 'next-seo'
 import NextImage from 'next/image'
 
 import gohanGif from '../assets/gohan.gif'
+import Arena from '../components/Arena'
 import SelectCharacter from '../components/SelectCharacter'
 import { CONTRACT_ADDRESS, transformCharacterData } from '../constants'
 import myEpicGame from '../utils/MyEpicGame.json'
@@ -92,6 +93,32 @@ export default function Home() {
     }
   }, [currentAccount])
 
+  const renderContent = () => {
+    if (!currentAccount) {
+      return (
+        <VStack>
+          <Box rounded="2xl" overflow="hidden" display="inline-flex" mb="12">
+            <NextImage src={gohanGif} />
+          </Box>
+          <Button
+            onClick={connectWalletAction}
+            colorScheme="orange"
+            size="lg"
+            rounded="xl"
+          >
+            Connect Wallet To Get Started
+          </Button>
+        </VStack>
+      )
+    } else if (currentAccount && !characterNFT) {
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} />
+    } else if (currentAccount && characterNFT) {
+      return (
+        <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
+      )
+    }
+  }
+
   return (
     <Box>
       {/* Edit the Head info */}
@@ -110,34 +137,11 @@ export default function Home() {
         <Heading as="h1" color="white" fontSize="48px">
           🔥 DragonVerse 🔥
         </Heading>
-        <Text mb="12" color="white" fontSize="20px">
+        <Text mb="8" color="white" fontSize="20px">
           Team up to protect the DragonVerse!
         </Text>
 
-        {!isLoading ? (
-          !currentAccount && !characterNFT ? (
-            <VStack>
-              <Box
-                rounded="2xl"
-                overflow="hidden"
-                display="inline-flex"
-                mb="12"
-              >
-                <NextImage src={gohanGif} />
-              </Box>
-              <Button
-                onClick={connectWalletAction}
-                colorScheme="orange"
-                size="lg"
-                rounded="xl"
-              >
-                Connect Wallet To Get Started
-              </Button>
-            </VStack>
-          ) : (
-            <SelectCharacter setCharacterNFT={setCharacterNFT} />
-          )
-        ) : null}
+        {!isLoading && renderContent()}
       </Flex>
 
       <Box role="contentinfo" p="10"></Box>
