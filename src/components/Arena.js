@@ -83,15 +83,14 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
   }, [gameContract, setCharacterNFT])
 
   return (
-    <Flex maxW="1110px" w="full" direction="column" align="center">
+    <Flex maxW="1110px" w="full" align="center" direction="column">
       <Stack
         w="full"
         align="center"
         spacing="10"
         justify="center"
-        direction="row"
-        mb="12"
-        bg="blue.800"
+        direction={{ base: 'column', md: 'row' }}
+        mb="8"
         maxW="800px"
         p="10"
         rounded="md"
@@ -122,16 +121,18 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
           />
         )}
       </Stack>
-      <Button
-        px="16"
-        py="8"
-        colorScheme="blue"
-        onClick={runAttackAction}
-        rounded="md"
-        fontSize="20px"
-      >
-        Attack {boss.name} !
-      </Button>
+      {boss && (
+        <Button
+          px="16"
+          py="8"
+          colorScheme="blue"
+          onClick={runAttackAction}
+          rounded="md"
+          fontSize="20px"
+        >
+          Attack {boss.name} !
+        </Button>
+      )}
     </Flex>
   )
 }

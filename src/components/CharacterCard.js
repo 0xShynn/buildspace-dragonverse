@@ -38,7 +38,6 @@ const CharacterCard = ({ name, image, hp, maxHp, type, children }) => {
         colorScheme="green"
         roundedBottom="lg"
         height="6"
-        mb="4"
         w="full"
       >
         <ProgressLabel textAlign="right" pr="4">
