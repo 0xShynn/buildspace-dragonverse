@@ -20,12 +20,12 @@ export default function Home() {
   // Since this method will take some time, make sure to declare it as async
   const checkIfWalletIsConnected = async () => {
     try {
-      setIsLoading(true)
       // First make sure we have access to window.ethereum
       const { ethereum } = window
 
       if (!ethereum) {
         console.log('Make sure you have MetaMask!')
+        setIsLoading(false)
         return
       } else {
         console.log('We have the ethereum object', ethereum)
@@ -107,7 +107,7 @@ export default function Home() {
             onClick={connectWalletAction}
             colorScheme="orange"
             size="lg"
-            rounded="xl"
+            rounded="md"
           >
             Connect Wallet To Get Started
           </Button>

@@ -132,7 +132,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
             name={boss.name}
             hp={boss.hp}
             maxHp={boss.maxHp}
-            image={boss.imageURI}
+            image="/assets/super-saiyan-rose.jpg"
             attackDmg={boss.attackDamage}
             type="boss"
           />
@@ -147,6 +147,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
           onClick={runAttackAction}
           fontSize="20px"
           rounded="md"
+          _hover={{ bg: '#16307D' }}
         >
           {attackState === 'Attacking' ? (
             <span>
