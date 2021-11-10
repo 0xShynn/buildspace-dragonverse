@@ -5,6 +5,8 @@ const global = {
     fontSize: '16px',
     fontFamily: 'body',
     bg: 'gray.800',
+    bgImage: '/assets/endless-constellation.svg',
+    bgRepeat: 'repeat',
   },
 }
 

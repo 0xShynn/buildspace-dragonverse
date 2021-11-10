@@ -20,6 +20,7 @@ export default function Home() {
   // Since this method will take some time, make sure to declare it as async
   const checkIfWalletIsConnected = async () => {
     try {
+      setIsLoading(true)
       // First make sure we have access to window.ethereum
       const { ethereum } = window
 
@@ -68,6 +69,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchNFTMetadata = async () => {
+      setIsLoading(true)
       console.log('Checking for Character NFT on address: ', currentAccount)
 
       const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -85,6 +87,7 @@ export default function Home() {
       } else {
         console.log('No character NFT found')
       }
+      setIsLoading(false)
     }
 
     if (currentAccount) {
@@ -131,20 +134,29 @@ export default function Home() {
         justify="center"
         py="12"
         px="6"
-        maxW="1110px"
-        mx="auto"
       >
-        <Heading as="h1" color="white" fontSize="48px">
-          🔥 DragonVerse 🔥
-        </Heading>
-        <Text mb="8" color="white" fontSize="20px">
-          Team up to protect the DragonVerse!
-        </Text>
+        {!isLoading && (
+          <>
+            <Heading
+              as="h1"
+              color="white"
+              fontSize={{ base: 30, md: 48 }}
+              fontWeight="700"
+            >
+              🐲 DRAGONVERSE 🐲
+            </Heading>
+            <Text
+              mb={{ base: 2, md: 8 }}
+              color="white"
+              fontSize={{ base: 16, md: 20 }}
+            >
+              Team up to protect the DragonVerse!
+            </Text>
 
-        {!isLoading && renderContent()}
+            {renderContent()}
+          </>
+        )}
       </Flex>
-
-      <Box role="contentinfo" p="10"></Box>
     </Box>
   )
 }

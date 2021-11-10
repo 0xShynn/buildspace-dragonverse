@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 
-import { Box, Button, Flex, Stack, Text, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Flex,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { ethers } from 'ethers'
 
 import { CONTRACT_ADDRESS, transformCharacterData } from '../constants'
@@ -60,6 +67,9 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
       const playerHp = newPlayerHp.toNumber()
 
       console.log(`AttackComplete: Boss Hp: ${bossHp} - Player Hp: ${playerHp}`)
+      alert(
+        `Your attack succeeded!\nBoss: ${bossHp} HP\nPlayer: ${playerHp} HP`
+      )
 
       setBoss((prevState) => {
         return { ...prevState, hp: bossHp }
@@ -87,10 +97,10 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
       <Stack
         w="full"
         align="center"
-        spacing="10"
+        spacing={{ base: 4, md: 10 }}
         justify="center"
         direction={{ base: 'column', md: 'row' }}
-        mb="8"
+        mb={{ base: 4, md: 8 }}
         maxW="800px"
         p="10"
         rounded="md"
@@ -101,12 +111,18 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
             hp={characterNFT.hp}
             maxHp={characterNFT.maxHp}
             image={characterNFT.imageURI}
+            attackDmg={characterNFT.attackDamage}
             type="player"
           />
         )}
 
         <Box>
-          <Text color="white" fontSize="36px" fontWeight="bold">
+          <Text
+            color="white"
+            fontSize="36px"
+            fontWeight="bold"
+            fontFamily="heading"
+          >
             Vs
           </Text>
         </Box>
@@ -117,20 +133,34 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
             hp={boss.hp}
             maxHp={boss.maxHp}
             image={boss.imageURI}
+            attackDmg={boss.attackDamage}
             type="boss"
           />
         )}
       </Stack>
       {boss && (
         <Button
-          px="16"
+          px={attackState === 'Attacking' ? 10 : 16}
           py="8"
-          colorScheme="blue"
+          bg="#2D65C6"
+          color="white"
           onClick={runAttackAction}
-          rounded="md"
           fontSize="20px"
+          rounded="md"
         >
-          Attack {boss.name} !
+          {attackState === 'Attacking' ? (
+            <span>
+              <CircularProgress
+                isIndeterminate
+                color="green.300"
+                mr="3"
+                size="8"
+              />
+              Attacking the Boss...
+            </span>
+          ) : (
+            'Attack the Boss!'
+          )}
         </Button>
       )}
     </Flex>
