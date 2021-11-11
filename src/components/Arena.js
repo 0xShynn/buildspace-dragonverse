@@ -113,6 +113,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
             image={characterNFT.imageURI}
             attackDmg={characterNFT.attackDamage}
             type="player"
+            banner={true}
           />
         )}
 
@@ -135,6 +136,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
             image="/assets/super-saiyan-rose.jpg"
             attackDmg={boss.attackDamage}
             type="boss"
+            banner={true}
           />
         )}
       </Stack>

@@ -8,6 +8,7 @@ const CharacterCard = ({
   maxHp,
   attackDmg,
   type,
+  banner,
   children,
 }) => {
   return (
@@ -19,30 +20,32 @@ const CharacterCard = ({
       align="center"
     >
       <Box h="400px" w="full" pos="relative" roundedTop="md" overflow="hidden">
-        <Box
-          pos="absolute"
-          zIndex="overlay"
-          top="0"
-          left="50%"
-          transform="translate(-50%, 0)"
-        >
-          <Heading
-            color="white"
-            textTransform="uppercase"
-            fontSize="18px"
-            mb="2"
-            bg={type === 'boss' ? '#FA129D' : '#2B60BF'}
-            mt="3"
-            pt="1"
-            pb="1"
-            pl="2"
-            pr="1"
-            letterSpacing="8px"
-            rounded="sm"
+        {banner && (
+          <Box
+            pos="absolute"
+            zIndex="overlay"
+            top="0"
+            left="50%"
+            transform="translate(-50%, 0)"
           >
-            {type === 'boss' ? 'Boss' : 'Player'}
-          </Heading>
-        </Box>
+            <Heading
+              color="white"
+              textTransform="uppercase"
+              fontSize="18px"
+              mb="2"
+              bg={type === 'boss' ? '#FA129D' : '#2B60BF'}
+              mt="3"
+              pt="1"
+              pb="1"
+              pl="2"
+              pr="1"
+              letterSpacing="8px"
+              rounded="sm"
+            >
+              {type === 'boss' ? 'Boss' : 'Player'}
+            </Heading>
+          </Box>
+        )}
         <Box pos="absolute" zIndex="overlay" bottom="0">
           <Box
             bg="linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0) 100%)"
@@ -75,7 +78,8 @@ const CharacterCard = ({
               {name}
             </Text>
             <Text color="white" fontWeight="bold" fontSize="14px">
-              {hp} / {maxHp} HP • {attackDmg} ATK
+              {hp || maxHp ? `${hp} / ${maxHp} HP` : null}
+              {attackDmg && ` • ${attackDmg} ATK`}
             </Text>
           </Box>
         </Box>

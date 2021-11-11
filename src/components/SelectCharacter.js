@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 
-import { Box, Button, Heading, Stack, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Stack } from '@chakra-ui/react'
 import { ethers } from 'ethers'
-import NextImage from 'next/image'
 
 import { CONTRACT_ADDRESS, transformCharacterData } from '../constants'
 import myEpicGame from '../utils/MyEpicGame.json'
+
+import CharacterCard from './CharacterCard'
 
 const SelectCharacter = ({ setCharacterNFT }) => {
   const [characters, setCharacters] = useState([])
@@ -36,7 +37,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
       )
       setGameContract(gameContract)
     } else {
-      console.log('Ethereum object not found.')
+      console.warn('Ethereum object not found.')
     }
   }, [])
 
@@ -94,40 +95,36 @@ const SelectCharacter = ({ setCharacterNFT }) => {
 
   const renderCharacters = () => {
     return characters.map((character, index) => (
-      <Box key={character.name} w="full">
-        <Box h="500px" pos="relative" rounded="md" overflow="hidden" mb="4">
-          <NextImage
-            src={`https://cloudflare-ipfs.com/ipfs/${character.imageURI}`}
-            alt={character.name}
-            layout="fill"
-          />
-        </Box>
-        <VStack>
-          <Heading as="h3" color="white" mb="4">
-            {character.name}
-          </Heading>
-          <Button
-            onClick={() => {
-              mintCharacterNFTAction(index)
-            }}
-          >
-            Mint {character.name}
-          </Button>
-        </VStack>
-      </Box>
+      <Flex key={character.name} w="full" direction="column" align="center">
+        <CharacterCard
+          name={character.name}
+          image={character.imageURI}
+          hp={character.hp}
+          maxHp={character.maxHp}
+        />
+        <Button
+          mt="10"
+          onClick={() => {
+            mintCharacterNFTAction(index)
+          }}
+        >
+          Mint {character.name}
+        </Button>
+      </Flex>
     ))
   }
 
   return (
-    <Box w="full">
+    <Box w="full" maxW="1110px" mx="auto">
       <Heading as="h2" color="white" textAlign="center" mb="10">
         Mint Your Hero. Choose wisely.
       </Heading>
       {characters.length > 0 && (
         <Stack
           direction={{ base: 'column', lg: 'row' }}
-          spacing="10"
+          spacing="0"
           justify="center"
+          align="center"
         >
           {renderCharacters()}
         </Stack>

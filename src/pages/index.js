@@ -1,8 +1,20 @@
 import { useEffect, useState } from 'react'
 
-import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { ethers } from 'ethers'
 import { NextSeo } from 'next-seo'
+import { useRouter } from 'next/dist/client/router'
 import NextImage from 'next/image'
 
 import gohanGif from '../assets/gohan.gif'
@@ -16,6 +28,7 @@ export default function Home() {
   const [currentAccount, setCurrentAccount] = useState(null)
   const [characterNFT, setCharacterNFT] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [networkName, setNetworkName] = useState(null)
 
   // Since this method will take some time, make sure to declare it as async
   const checkIfWalletIsConnected = async () => {
@@ -24,7 +37,7 @@ export default function Home() {
       const { ethereum } = window
 
       if (!ethereum) {
-        console.log('Make sure you have MetaMask!')
+        console.warn('Make sure you have MetaMask!')
         setIsLoading(false)
         return
       } else {
@@ -62,30 +75,33 @@ export default function Home() {
     }
   }
 
-  // This runs our function when the page loads.
-  useEffect(() => {
-    checkIfWalletIsConnected()
-  }, [])
-
   useEffect(() => {
     const fetchNFTMetadata = async () => {
       setIsLoading(true)
       console.log('Checking for Character NFT on address: ', currentAccount)
 
       const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
-      const gameContract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        myEpicGame.abi,
-        signer
-      )
+      const network = await provider.getNetwork()
+      setNetworkName(network.name)
 
-      const txn = await gameContract.checkIfUserHasNFT()
-      if (txn.name) {
-        console.log('User has character NFT')
-        setCharacterNFT(transformCharacterData(txn))
+      if (network.name === 'rinkeby') {
+        const signer = provider.getSigner()
+        const gameContract = new ethers.Contract(
+          CONTRACT_ADDRESS,
+          myEpicGame.abi,
+          signer
+        )
+
+        const txn = await gameContract.checkIfUserHasNFT()
+        if (txn.name) {
+          console.log('User has character NFT')
+          setCharacterNFT(transformCharacterData(txn))
+        } else {
+          console.log('No character NFT found')
+        }
       } else {
-        console.log('No character NFT found')
+        console.warn('Switch your network for rinkeby')
+        setNetworkName(network.name)
       }
       setIsLoading(false)
     }
@@ -95,6 +111,32 @@ export default function Home() {
       fetchNFTMetadata()
     }
   }, [currentAccount])
+
+  // This runs our function when the page loads.
+  useEffect(() => {
+    checkIfWalletIsConnected()
+  }, [])
+
+  // Reload the page whenever the account or the network changes.
+  const router = useRouter()
+  useEffect(() => {
+    const { ethereum } = window
+
+    if (ethereum) {
+      ethereum.on('chainChanged', () => {
+        router.reload(window.location.pathname)
+      })
+
+      ethereum.on('accountsChanged', () => {
+        router.reload(window.location.pathname)
+      })
+    }
+
+    return () => {
+      ethereum.off('chainChanged', () => {})
+      ethereum.off('accountsChanged', () => {})
+    }
+  }, [router])
 
   const renderContent = () => {
     if (!currentAccount) {
@@ -113,11 +155,23 @@ export default function Home() {
           </Button>
         </VStack>
       )
-    } else if (currentAccount && !characterNFT) {
+    } else if (currentAccount && !characterNFT && networkName === 'rinkeby') {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />
-    } else if (currentAccount && characterNFT) {
+    } else if (currentAccount && characterNFT && networkName === 'rinkeby') {
       return (
         <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
+      )
+    } else {
+      return (
+        <Box py="10">
+          <Alert status="warning">
+            <AlertIcon />
+            <AlertTitle mr="2">
+              Your wallet is connected to {networkName}.
+            </AlertTitle>
+            <AlertDescription>Please switch to rinkeby.</AlertDescription>
+          </Alert>
+        </Box>
       )
     }
   }
