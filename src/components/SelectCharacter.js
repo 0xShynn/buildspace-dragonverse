@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 
-import { Box, Button, Flex, Heading, Stack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Flex,
+  Heading,
+  Stack,
+} from '@chakra-ui/react'
 import { ethers } from 'ethers'
 
 import { CONTRACT_ADDRESS, transformCharacterData } from '../constants'
@@ -11,17 +18,24 @@ import CharacterCard from './CharacterCard'
 const SelectCharacter = ({ setCharacterNFT }) => {
   const [characters, setCharacters] = useState([])
   const [gameContract, setGameContract] = useState(null)
+  const [mintingState, setMintingState] = useState('')
+  const [selectedCharacterId, setSelectedCharacterId] = useState(null)
 
   const mintCharacterNFTAction = async (characterId) => {
     try {
       if (gameContract) {
-        console.log('Minting character in progress...')
         const mintTxn = await gameContract.mintCharacterNFT(characterId)
+        setMintingState('isMinting')
+        setSelectedCharacterId(characterId)
+        console.log('Minting character in progress...')
         await mintTxn.wait()
+        setMintingState('isMinted')
         console.log('mintTxn: ', mintTxn)
       }
     } catch (error) {
       console.warn('MintCharacterAction Error: ', error)
+      setMintingState('')
+      setSelectedCharacterId(null)
     }
   }
 
@@ -94,24 +108,40 @@ const SelectCharacter = ({ setCharacterNFT }) => {
   }, [gameContract, setCharacterNFT])
 
   const renderCharacters = () => {
-    return characters.map((character, index) => (
-      <Flex key={character.name} w="full" direction="column" align="center">
-        <CharacterCard
-          name={character.name}
-          image={character.imageURI}
-          hp={character.hp}
-          maxHp={character.maxHp}
-        />
-        <Button
-          mt="10"
-          onClick={() => {
-            mintCharacterNFTAction(index)
-          }}
-        >
-          Mint {character.name}
-        </Button>
-      </Flex>
-    ))
+    return characters.map((character, index) => {
+      console.log(index, selectedCharacterId)
+      return (
+        <Flex key={character.name} w="full" direction="column" align="center">
+          <CharacterCard
+            name={character.name}
+            image={character.imageURI}
+            hp={character.hp}
+            maxHp={character.maxHp}
+          />
+          <Button
+            mt="10"
+            colorScheme="blue"
+            onClick={() => {
+              mintCharacterNFTAction(index)
+            }}
+          >
+            {mintingState === 'isMinting' && selectedCharacterId === index ? (
+              <span>
+                <CircularProgress
+                  isIndeterminate
+                  color="green.300"
+                  mr="3"
+                  size="6"
+                />
+                Minting in progress...
+              </span>
+            ) : (
+              `Mint ${character.name}`
+            )}
+          </Button>
+        </Flex>
+      )
+    })
   }
 
   return (
@@ -122,7 +152,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
       {characters.length > 0 && (
         <Stack
           direction={{ base: 'column', lg: 'row' }}
-          spacing="0"
+          spacing="4"
           justify="center"
           align="center"
         >

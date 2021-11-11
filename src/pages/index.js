@@ -131,11 +131,6 @@ export default function Home() {
         router.reload(window.location.pathname)
       })
     }
-
-    return () => {
-      ethereum.off('chainChanged', () => {})
-      ethereum.off('accountsChanged', () => {})
-    }
   }, [router])
 
   const renderContent = () => {
@@ -197,7 +192,7 @@ export default function Home() {
               fontSize={{ base: 30, md: 48 }}
               fontWeight="700"
             >
-              🐲 DRAGONVERSE 🐲
+              🐉 DRAGONVERSE 🐉
             </Heading>
             <Text
               mb={{ base: 2, md: 8 }}
