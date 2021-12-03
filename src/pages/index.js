@@ -19,6 +19,7 @@ import NextImage from 'next/image'
 
 import gohanGif from '../assets/gohan.gif'
 import Arena from '../components/Arena'
+import Footer from '../components/Footer'
 import SelectCharacter from '../components/SelectCharacter'
 import { CONTRACT_ADDRESS, transformCharacterData } from '../constants'
 import myEpicGame from '../utils/MyEpicGame.json'
@@ -206,6 +207,7 @@ export default function Home() {
           </>
         )}
       </Flex>
+      <Footer />
     </Box>
   )
 }
