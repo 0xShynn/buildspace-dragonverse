@@ -10,7 +10,7 @@ const defaultDescription = 'Default description'
 // Edit the SEO parameters
 export const SEO = {
   defaultTitle: defaultTitle,
-  titleTemplate: `%s | ${defaultTitle}`,
+  titleTemplate: `${defaultTitle}`,
   canonical: canonicalUrl,
   additionalLinkTags: [
     {
@@ -62,7 +62,7 @@ export const SEO = {
     images: [
       {
         // Add your custom image for sharing
-        url: 'https://via.placeholder.com/1200x630',
+        url: 'https://www.dropbox.com/s/i2g2523e8ds09lr/buildspace-dragonverse-ogimage.png?raw=1',
         width: 1200,
         height: 630,
         alt: 'Preview of the website',
